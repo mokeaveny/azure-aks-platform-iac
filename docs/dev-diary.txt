@@ -1,0 +1,6 @@
+1. Created the Terraform remote state blob container in Azure through the Azure CLI.
+   The logic can be found in utils/remote-state-creation.ps1
+
+
+
+
