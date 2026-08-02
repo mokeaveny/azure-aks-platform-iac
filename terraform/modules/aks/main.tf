@@ -11,6 +11,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id = var.subnet_id
   }
 
+  node_provisioning_profile {
+    mode               = "Manual"
+    default_node_pools = "Auto"
+  }
+
+  network_profile {
+    network_plugin = "kubenet"
+    service_cidr   = "172.16.0.0/16" # Non-overlapping IP range for K8s Services
+    dns_service_ip = "172.16.0.10"
+  }
+
   identity {
     type = "SystemAssigned"
   }
