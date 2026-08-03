@@ -1,5 +1,7 @@
 1. Created the Terraform remote state blob container in Azure through the Azure CLI.
    The logic can be found in utils/remote-state-creation.ps1
+2. Created the Terraform for the infrastructure for the AKS cluster. This includes a VNet,
+   Subnet, ACR, etc...
 
 
 
