@@ -5,7 +5,6 @@
 3. Created a very simple web api that includes the GET endpoint of /api/info which provides data
    to index.html about the pod/container the application is currently running within. Such as
    POD / CONTAINER ID, ENVIRONMENT and the TIME
-
-
+4. Added the dockerfile definition to create the docker image
 
 
