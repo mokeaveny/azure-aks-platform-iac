@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKS Platform Demo</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1 class="title">☁️ Azure AKS Platform</h1>
+            <span class="status-badge" id="status-badge">● Loading...</span>
+        </div>
+        <div class="grid">
+            <div class="field">
+                <span class="label">Pod / Container ID</span>
+                <span class="value" id="hostName">Loading...</span>
+            </div>
+            <div class="field">
+                <span class="label">Environment</span>
+                <span class="value" id="environment">Loading...</span>
+            </div>
+            <div class="field">
+                <span class="label">Server Time</span>
+                <span class="value" id="timestamp">Loading...</span>
+            </div>
+        </div>
+        <div class="footer">
+            Served via .NET Static Files in AKS
+        </div>
+    </div>
+
+    <script>
+        // Dynamically fetch live cluster metadata from the backend API
+        fetch('/api/info')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('status-badge').innerText = '● ' + data.status;
+                document.getElementById('hostName').innerText = data.hostName;
+                document.getElementById('environment').innerText = data.environment;
+                document.getElementById('timestamp').innerText = new Date(data.timestamp).toUTCString();
+            })
+            .catch(err => {
+                document.getElementById('status-badge').innerText = '✕ Error';
+                document.getElementById('status-badge').style.color = '#ef4444';
+            });
+    </script>
+</body>
+</html>

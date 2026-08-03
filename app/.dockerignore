@@ -1,0 +1,13 @@
+# Ignore build outputs and caches
+**/bin/
+**/obj/
+
+# Ignore IDE / Tooling files
+.vs/
+.vscode/
+.idea/
+*.user
+
+# Ignore git
+.git/
+.gitignore

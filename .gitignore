@@ -15,3 +15,14 @@ crash.log
 app/__pycache__/
 app/*.pyc
 .env
+
+## .NET / C# Build & Compiler Outputs
+[Bb]in/
+[Oo]bj/
+out/
+publish/
+
+## Environment & Secrets (NEVER commit local settings or secrets!)
+*.env
+*.env.local
+.env.*
