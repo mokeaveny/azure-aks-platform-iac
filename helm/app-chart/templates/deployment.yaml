@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aks-demo-api
+  labels:
+    app: aks-demo-api
+spec:
+  replicas: 2 # Runs 2 pods across the AKS nodes
+  selector:
+    matchLabels:
+      app: aks-demo-api
+  template:
+    metadata:
+      labels:
+        app: aks-demo-api
+    spec:
+      containers:
+      - name: web-api
+        image: azureaksplatformiacacr.azurecr.io/aks-demo-api:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
