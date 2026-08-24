@@ -1,43 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aks-demo-api
+  name: {{ .Release.Name }}
   labels:
-    app: aks-demo-api
+    app: {{ .Release.Name }}
 spec:
   replicas: 2 # Runs 2 pods across the AKS nodes
   selector:
     matchLabels:
-      app: aks-demo-api
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: aks-demo-api
+        app: {{ .Release.Name }}
     spec:
       containers:
       - name: web-api
-        image: azureaksplatformiacacr.azurecr.io/aks-demo-api:v1
-        imagePullPolicy: Always
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.service.targetPort }}
         resources:
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: {{ .Values.resources.requests.memory }}
+            memory: {{ .Values.resources.requests.memory }}
           limits:
-            cpu: "250m"
-            memory: "256Mi"
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
         
         livenessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: {{ .Values.service.targetPort }}
           initialDelaySeconds: 5
           periodSeconds: 10
         
         readinessProbe:
           httpGet:
             path: /ready
-            port: 8080
+            port: {{ .Values.service.targetPort }}
           initialDelaySeconds: 5
           periodSeconds: 10

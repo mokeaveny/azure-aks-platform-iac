@@ -1,0 +1,28 @@
+# Global Settings
+replicaCount: 2
+
+# Container Image Configuration
+image:
+  repository: azureaksplatformiacacr.azurecr.io/aks-demo-api
+  tag: "v1"
+  pullPolicy: Always
+
+# Container Resources
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "250m"
+    memory: "256Mi"
+
+# Service Configuration
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8080
+
+# Environment
+config: 
+  environmentName: "Production"
+  apiTitle: "AKS Demo API"
