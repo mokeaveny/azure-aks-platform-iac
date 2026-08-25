@@ -1,0 +1,70 @@
+name: "Application CI/CD"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'app/**'
+      - 'helm/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ACR_NAME: ${{ vars.ACR_NAME }}
+  RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+  AKS_CLUSTER: ${{ vars.AKS_CLUSTER }}
+  IMAGE_NAME: 'aks-demo-api'
+
+jobs:
+  build-and-deploy:
+    name: "Build, Push & Deploy via Helm"
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Git SHA Tag
+        id: vars
+        run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Azure Login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: ACR Login
+        run: az acr login --name ${{ vars.ACR_NAME }}
+
+      - name: Build and Push Docker Image
+        run: |
+          ACR_SERVER="${{ var.ACR_NAME }}.azurecr.io"
+
+          docker build \
+            -t $ACR_SERVER/${{ env.IMAGE_NAME }}:${{ env.SHA_SHORT }} \
+            -t $ACR_SERVER/${{ env.IMAGE_NAME }}:latest \
+            ./app
+
+          docker push $ACR_SERVER/${{ env.IMAGE_NAME }}:${{ env.SHA_SHORT }}
+          docker push $ACR_SERVER/${{ env.IMAGE_NAME }}:latest
+
+      - name: Get AKS Credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ vars.RESOURCE_GROUP }} \
+            --name ${{ vars.AKS_CLUSTER }}
+      
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'v3.14.0'
+      
+      - name: Deploy Helm Chart
+        run: |
+          helm upgrade --install aks-demo-api .heml/app-chart \
+            --set image.repository="${{ vars.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}" \
+            --set image.tag="${{ env.SHA_SHORT }}"
