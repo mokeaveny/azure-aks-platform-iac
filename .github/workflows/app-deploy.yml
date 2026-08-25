@@ -42,7 +42,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          ACR_SERVER="${{ var.ACR_NAME }}.azurecr.io"
+          ACR_SERVER="${{ vars.ACR_NAME }}.azurecr.io"
 
           docker build \
             -t $ACR_SERVER/${{ env.IMAGE_NAME }}:${{ env.SHA_SHORT }} \
