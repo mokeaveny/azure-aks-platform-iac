@@ -1,3 +1,5 @@
+# Pipeline trigger test
+
 resource "azurerm_resource_group" "resource_group" {
   name     = "${var.project_name}-resources"
   location = var.location
