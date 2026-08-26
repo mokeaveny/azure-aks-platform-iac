@@ -6,5 +6,9 @@
    to index.html about the pod/container the application is currently running within. Such as
    POD / CONTAINER ID, ENVIRONMENT and the TIME
 4. Added the dockerfile definition to create the docker image
-
-
+5. Created the manifest files for K8S
+6. Created the helm chart files for configurable K8S manifests
+7. Added the pipeline definition logic for the terraform and application deployment
+8. Encountered an error when using OIDC in the terraform pipeline - the subject for the federated credential
+   required the Organization ID value and the Repository ID value. This is required for security in case the 
+   repository and account are deleted and a malicious user takes advantage of that
